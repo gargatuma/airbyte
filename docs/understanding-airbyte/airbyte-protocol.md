@@ -162,17 +162,13 @@ The following are fields that still exist in the specification but are slated to
       - connectionSpecification
     additionalProperties: true
     properties:
-      # todo - split ConnectorSpecification into general vs connector type sections of properties
       # General Properties (Common to all connectors)
-      # todo (cgardens) - prefer snake case for field names.
       documentationUrl:
         type: string
         format: uri
-      # todo (cgardens) - prefer snake case for field names.
       changelogUrl:
         type: string
         format: uri
-      # todo (cgardens) - prefer snake case for field names.
       connectionSpecification:
         description: ConnectorDefinition specific blob. Must be a valid JSON string.
         type: object
@@ -346,7 +342,6 @@ This section will document the meaning of each field in an `ConfiguredAirbyteStr
     enum:
       - append
       - overwrite
-      #- upsert_dedup # TODO chris: SCD Type 1 can be implemented later
       - append_dedup # SCD Type 1 & 2
 ```
 
@@ -499,7 +494,6 @@ AirbyteMessage:
       "$ref": "#/definitions/AirbyteLogMessage"
     spec:
       "$ref": "#/definitions/ConnectorSpecification"
-    # todo (cgardens) - prefer snake case for field names.
     connectionStatus:
       "$ref": "#/definitions/AirbyteConnectionStatus"
     catalog:
