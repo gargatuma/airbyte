@@ -107,6 +107,7 @@ if (!System.getenv().containsKey("SUB_BUILD") || System.getenv().get("SUB_BUILD"
     include ':airbyte-integrations:connectors:destination-s3'
     include ':airbyte-integrations:connectors:destination-gcs'
 
+    include ':airbyte-integrations:connectors:destination-intempt'
     include ':tools:code-generator'
 }
 
