@@ -148,7 +148,7 @@ The specification also contains information about what features the Actor suppor
 
 `documentationUrl` and `changelogUrl` are optional fields that link to additional information about the connector.
 
-The following are fields that still exist in the specification but are slated to be removed as they are leak choices about how Airbyte implements the protocol as opposed to being strictly necessary part of the protocol.
+The following are fields that still exist in the specification but are slated to be removed as they leak choices about how Airbyte implements the protocol as opposed to being strictly necessary part of the protocol.
 * `supportsIncremental` is deprecated and can be ignored. It is vestigial from when full refresh / incremental was specified at the Actor level.
 * `supportsNormalization` determines whether the Destination supports Basic Normalization
 * `supportsDBT` - determines whether the Destination supports Basic Normalization
