@@ -49,6 +49,7 @@ Additional Invariants
 * All messages emitted from Actors must be wrapped in an `AirbyteMessage`([ref](#airbytemessage)) envelope.
 * Messages not wrapped in the `AirbyteMessage` must be dropped (e.g. not be passed from Source to Destination).  However certain implementations of the Airbyte Protocol may choose to store and log unknown messages for debugging purposes.
 * Each message must be on its own line. Multiple messages _cannot_ be sent on the same line. The JSON objects cannot be serialized across multiple lines.
+* STDERR should only be used for log messages (for errors). All other Data Channel Data moves on STDIN and STDOUT.
 
 ## Common Interface
 ### Spec
@@ -108,6 +109,7 @@ The `discover` method detects and describes the _structure_ of the data in the d
 1. `message stream` - A stream of `AirbyteRecordMessage`s and `AirbyteStateMessage`s piped to stdout.
    * A source outputs `AirbyteStateMessages` in order to allow checkpointing data replication. State is described in more detail below in the [State & Checkpointing](#state--checkpointing) section.
    * Only `AirbyteRecordMessage`s that contain streams that are in the catalog will be processed. Those that do not will be ignored. See [Schema Mismatches](#schema-mismatches) for more details.
+   * AirbyteRecordMessages from multiple streams can be multiplexed/mixed together, and do not need to be emitted serially as a group.
 
 ## Destination
 A destination receives data on the Data Channel Ingress and loads it into an underlying data store (e.g. data warehouse or database).
@@ -129,7 +131,7 @@ For the sake of brevity, we will not re-describe `spec` and `check`. They are ex
 3. `message stream` - \(this stream is consumed on stdin--it is not passed as an arg\). It will receive a stream of JSON-serialized `AirbyteMesssage`.
 
 #### Output:
-1. `message stream` - A stream of `AirbyteStateMessage`s piped to stdout. The destination connector should only output state messages if they were previously received as input on stdin. Outputting a state message indicates that all records which came before it have been successfully written to the destination.
+1. `message stream` - A stream of `AirbyteStateMessage`s piped to stdout. The destination connector should only output state messages if they were previously received as input on stdin. Outputting a state message indicates that all records which came before it have been successfully written to the destination. Implementations of this spec will likely want to move messages filtering and validation upstream of the destination itself
 
 * The destination should read in the `AirbyteMessages` and write any that are of type `AirbyteRecordMessage` to the underlying data store.
 * The destination should ignore fields or streams that are out of sync with the `catalog`. The destination should always make its best effort to load what data is there that does match that catalog. e.g. if the User Stream has the fields first_name and last_name in the catalog, but the record has first_name and eye_color, the destination should persist first_name, even though last_name is missing. It should ignore eye_color as extraneous.
@@ -436,7 +438,6 @@ This table breaks down attributes of these state types.
 
 | |Stream|Global|Legacy|
 |---|---|---|---|
-|Protocol Version|2|2|1,2|
 |Stream-Level Configuration / Reset|X|X| |
 |Stream-Level Replication Isolation|X| | |
 |Single state message describes full state for Source| |X|X|
