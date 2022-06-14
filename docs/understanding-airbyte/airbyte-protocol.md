@@ -132,7 +132,7 @@ For the sake of brevity, we will not re-describe `spec` and `check`. They are ex
 1. `message stream` - A stream of `AirbyteStateMessage`s piped to stdout. The destination connector should only output state messages if they were previously received as input on stdin. Outputting a state message indicates that all records which came before it have been successfully written to the destination.
 
 * The destination should read in the `AirbyteMessages` and write any that are of type `AirbyteRecordMessage` to the underlying data store.
-* The destination should fail if any of the messages it receives do not match the structure described in the `catalog`.
+* The destination should ignore fields or streams that are out of sync with the `catalog`. The destination should always make its best effort to load what data is there that does match that catalog. e.g. if the User Stream has the fields first_name and last_name in the catalog, but the record has first_name and eye_color, the destination should persist first_name, even though last_name is missing. It should ignore eye_color as extraneous.
 
 This concludes the overview of the Actor Interface. The remaining content will dive deeper into each concept covered so far.
 
