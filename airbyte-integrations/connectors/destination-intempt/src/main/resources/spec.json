@@ -1,21 +1,35 @@
 {
   "documentationUrl": "https://docs.airbyte.io/integrations/destinations/intempt",
-  "supportsIncremental": TODO,
-  "supported_destination_sync_modes": ["TODO"],
+  "supportsIncremental": false,
+  "supported_destination_sync_modes": ["overwrite", "append"],
   "connectionSpecification": {
     "$schema": "http://json-schema.org/draft-07/schema#",
-    "title": "TODO",
+    "title": "Intempt Destination Spec",
     "type": "object",
     "required": [
-      "TODO"
+      "org_name",
+      "source_id",
+      "api_key"
     ],
     "additionalProperties": false,
     "properties": {
-      "TODO_sample_field": {
-        "title": "Sample Field",
+      "org_name": {
+        "title": "Organization Name",
         "type": "string",
-        "description": "",
-        "examples": [""]
+        "description": "This is the clients organization name",
+        "examples": ["intempt"]
+      },
+      "source_id": {
+        "title": "Source Id",
+        "type": "string",
+        "description": "Source Id",
+        "examples": ["111111111111111111"]
+      },
+      "api_key": {
+        "title": "Api Key",
+        "type": "string",
+        "description": "Bearer Token for Intempt API authorization",
+        "examples": ["111111111111111111zzzzzzzzzzzzzzz"]
       }
     }
   }
