@@ -1,4 +1,4 @@
- Azure Blob Storage Test Configuration
+# Azure Blob Storage Test Configuration
 
 In order to test the Azure Blob Storage destination, you need a Microsoft account.
 
