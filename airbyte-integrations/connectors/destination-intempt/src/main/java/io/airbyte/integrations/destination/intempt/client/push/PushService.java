@@ -1,35 +1,30 @@
 package io.airbyte.integrations.destination.intempt.client.push;
 
-import software.amazon.awssdk.http.HttpStatusCode;
+import io.airbyte.integrations.destination.intempt.client.Service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
-public class PushService {
+public class PushService extends Service {
 
-    private static final String BASE_URL = "https://api.staging.intempt.com/v1/";
+    private static final Logger LOGGER = LoggerFactory.getLogger(PushService.class);
 
-    private final HttpClient client;
+    public HttpResponse<String> pushData(String orgName, String body, String collectionId, String apiKey) throws IOException, InterruptedException, URISyntaxException {
+        final URI uri = createUri(orgName, collectionId);
 
-    public PushService() {
-        this.client = HttpClient.newHttpClient();
+        return makePostRequest(apiKey, uri, body);
     }
 
-    public void pushData(String body, String collectionId, String apiKey) throws IOException, InterruptedException, URISyntaxException {
-        final String url = BASE_URL + "collections/" + collectionId + "/data";
+    protected URI createUri(String orgName, String collId) throws URISyntaxException {
+        return new URI(HOST + orgName + "/collections/" + collId + "/data");
+    }
 
-        HttpRequest request = HttpRequest.newBuilder(new URI(url))
-                .header("Authorization","Bearer " + apiKey)
-                .POST(HttpRequest.BodyPublishers.ofString(body))
-                .build();
-
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        if (response.statusCode() != HttpStatusCode.CREATED) {
-            throw new IllegalArgumentException(response.body());
-        }
+    @Override
+    protected URI createUri(String orgName) throws URISyntaxException {
+        return null;
     }
 }
